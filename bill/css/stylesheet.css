@@ -1,0 +1,73 @@
+/*--------------------- BODY -------------------*/
+*{
+    margin: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    /*background-color: white;*/
+}
+
+/*---------------X------ BODY ----------X---------*/
+
+/*--------------------- HEADER -------------------*/
+
+header{
+    background-color: #99c2ff;
+}
+
+header .container .row .image
+{
+    padding-left: 0;
+    margin-left: 0;
+}
+
+header .container .row ul
+{
+    padding-right: 0;
+    padding-top: 1rem;
+    margin-right: 0;
+}
+
+header .container .row ul span.invoice
+{
+    font-size: 5rem;
+}
+
+main section.amount
+{
+    margin-left: 35rem;
+}
+
+main section.condition div
+{
+    display: flex;
+    justify-content: space-between;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+header span.color-gray{
+    color:gray;
+}
+
+
+
+
+
+
+/*------------X--------- HEADER ---------X----------*/
+
+
+/*Table row*/
+#row{
+
+    margin-right: 900px;
+}
+
+
+
+
+
+
+
+
+
