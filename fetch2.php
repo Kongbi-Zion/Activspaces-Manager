@@ -41,9 +41,6 @@
 				     </form>
 				</td>
 			</tr>
-
-			<!--<a href="department.php?id_client='<?php // echo $row['id_client']; ?>' " class="btn btn-success">Facture</a>-->
-
 <?php
 	}
 	
