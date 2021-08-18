@@ -69,76 +69,59 @@
                           <div class="formdiv">
 
                       <div class="card-header py-3">
-                        <h2 class="m-0 font-weight-bold text-primary">Edit Service</h2>
+                        <h2 class="m-0 font-weight-bold text-primary">Add Service</h2>
                       </div>
                       <br><br>
                       
 
-                        <?php
-
-                                    //  EDDITING DATA
-
-                                  include_once('db_connection.php');
-                                 
-                                 if(isset($_GET['id'])){
-                                  $id = $_GET['id'];
-
-                              $query = "SELECT * FROM services WHERE service_id='$id' ";
-                              $query_run = mysqli_query($connection, $query);
-
-                              foreach ($query_run as $row) 
-                              {
-                                ?>
+                        
                               <form action="php-code.php" method="POST" enctype="multipart/form-data">
-
-                                <input type="hidden" name="edit_id" value="<?php echo $row['service_id'];  ?>" >
-
                                   <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Name</label>
                                 <div class="col-sm-7">
-                                <input type="text" name="nom" value="<?php echo $row['name_of_service'];  ?>" class="form-control" placeholder="nom">
+                                <input type="text" name="nom" value="" class="form-control" placeholder="nom">
                                   </div>
                               </div>
 
                               <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Daily Price</label>
                                 <div class="col-sm-7">
-                                <input type="number" name="daily" value="<?php echo $row['daily_price'];  ?>" class="form-control" placeholder="Daily Price">
+                                <input type="number" name="daily" value="" class="form-control" placeholder="Daily Price">
                                   </div>
                               </div>
 
                                <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Weekly Price</label>
                                 <div class="col-sm-7">
-                                <input type="number" name="weekly" value="<?php echo $row['weekly_price'];  ?>" class="form-control" placeholder="Weekly Price">
+                                <input type="number" name="weekly" value="" class="form-control" placeholder="Weekly Price">
                                   </div>
                               </div>
 
                               <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Monthly Price</label>
                                 <div class="col-sm-7">
-                                <input type="number" name="monthly" value="<?php echo $row['monthly_price'];  ?>" class="form-control" placeholder="Monthly Price">
+                                <input type="number" name="monthly" value="" class="form-control" placeholder="Monthly Price">
                                   </div>
                               </div>
 
                                <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Subscription term</label>
                                 <div class="col-sm-7">
-                                <input type="text" name="term" value="<?php echo $row['Subscription_term'];  ?>" class="form-control" placeholder="Subscription term">
+                                <input type="text" name="term" value="" class="form-control" placeholder="Subscription term">
                                   </div>
                               </div>
 
                                <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Manager</label>
                                 <div class="col-sm-7">
-                                <input type="text" name="manager" value="<?php echo $row['manager'];  ?>" class="form-control" placeholder="Manager">
+                                <input type="text" name="manager" value="" class="form-control" placeholder="Manager">
                                   </div>
                               </div>
 
                               <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Capacity</label>
                                 <div class="col-sm-7">
-                                <input type="text" name="capacity" value="<?php echo $row['capacity'];  ?>" class="form-control" placeholder="Capacity">
+                                <input type="text" name="capacity" value="" class="form-control" placeholder="Capacity">
                                   </div>
                               </div>
 
@@ -152,19 +135,9 @@
 
       
                               <a href="all-services.php" class="btn btn-danger"> CANCEL</a>
-                              <button type="submit" name="serviceupdatebtn" class="btn btn-primary">Update</button>
+                              <button type="submit" name="add_service" class="btn btn-primary">Add Service</button>
 
                           </form>
-
-
-                                   <?php
-                            
-                                       
-                                   }
-                               }    
-                        ?>
-
-
                       
                     </div>
                   </div>

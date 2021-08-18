@@ -65,7 +65,63 @@ session_start();
 		}
      }
 
+    
+    //---------------------------------- Add New Service --------------------------------
+     if(isset($_POST['add_service']))
+     {
+	     $nom = $_POST['nom'];
+	     $daily = $_POST['daily'];
+	     $weekly = $_POST['weekly'];
+	     $monthly = $_POST['monthly'];
+	     $term = $_POST['term'];
+	     $manager = $_POST['manager'];
+	     $capacity = $_POST['capacity'];
+	     $filename = $_FILES['file']['name'];
 
+	      if($filename !='')
+	     {
+	     	 $fileTempName = $_FILES['file']['tmp_name'];
+	         $fileExt = explode('.', $filename);
+	         $fileActualExt = strtolower(end($fileExt));
+	         $fileNewName = uniqid('', true).".".$fileActualExt;
+             $allowed = array('jpg', 'jpeg', 'png', 'pdf');
+
+             if(in_array($fileActualExt, $allowed))
+             {
+             	 $fileDestination = 'img/courses/'.$fileNewName;
+                 move_uploaded_file($fileTempName, $fileDestination);
+                 $service_image = $fileNewName;
+
+                  $query = "INSERT INTO services (name_of_service, daily_price, weekly_price, monthly_price, Subscription_term, manager, capacity, service_image) VALUES ('$nom', '$daily', '$weekly', '$monthly', '$term', '$manager', '$capacity', '$service_image')";
+	             $query_run = mysqli_query($connection, $query);
+	         }
+	         else{
+
+    	         $_SESSION['status_img'] = "The file choosen was not an image";
+		         header('Location: add-service.php');
+             }
+	     
+         }
+         else
+         {
+         	$service_image = 1;
+         	$query2 = "INSERT INTO services (name_of_service, daily_price, weekly_price, monthly_price, Subscription_term, manager, capacity, service_image) VALUES ('$nom', '$daily', '$weekly', '$monthly', '$term', '$manager', '$capacity', '$service_image')";
+	         $query_run2 = mysqli_query($connection, $query2);
+         }
+
+         
+	     if($query_run OR $query_run2)
+	     {
+		     $_SESSION['success'] = "New Service has been Added";
+		     header('Location: all-services.php');
+	     }
+	     else
+	     {
+             $_SESSION['status'] = "Service has NOT been Added";
+		     header('Location: all-services.php');		
+	     }
+     }
+     
 
      //------------------------- Update Client Info ---------------------
      if(isset($_POST['updatebtn']))
@@ -109,11 +165,50 @@ session_start();
 	     $term = $_POST['term'];
 	     $manager = $_POST['manager'];
 	     $capacity = $_POST['capacity'];
+	     $filename = $_FILES['file']['name'];
 
-         $query = "UPDATE services SET name_of_service='$nom', daily_price='$daily', weekly_price='$weekly', monthly_price='$monthly', Subscription_term='$term', manager='$manager', capacity='$capacity' WHERE service_id='$id' ";
-	     $query_run = mysqli_query($connection, $query);
+	     if($filename !='')
+	     {
+	     	 $fileTempName = $_FILES['file']['tmp_name'];
+	         $fileExt = explode('.', $filename);
+	         $fileActualExt = strtolower(end($fileExt));
+	         $fileNewName = uniqid('', true).".".$fileActualExt;
+             $allowed = array('jpg', 'jpeg', 'png', 'pdf');
 
-	     if($query_run)
+             if(in_array($fileActualExt, $allowed))
+             {
+             	 $fileDestination = 'img/courses/'.$fileNewName;
+                 move_uploaded_file($fileTempName, $fileDestination);
+                 $service_image = $fileNewName;
+
+                 $query = "UPDATE services SET name_of_service='$nom', daily_price='$daily', weekly_price='$weekly', monthly_price='$monthly', Subscription_term='$term', manager='$manager', capacity='$capacity', service_image='$service_image' WHERE service_id='$id' ";
+	             $query_run = mysqli_query($connection, $query);
+
+	         }
+	         else{
+
+    	         $_SESSION['status_img'] = "The file choosen was not an image";
+		         header('Location: edit_service.php');
+             }
+	     
+         }
+         else
+         {
+         	 $query = "SELECT service_image FROM services WHERE service_id='$id' ";
+             $query_run = mysqli_query($connection, $query);
+             if ($query_run->num_rows > 0) 
+             {
+                 $img = $query_run->fetch_assoc();
+                 $simg = $img['service_image'];
+                 $service_image = $simg;
+             }
+
+             $query2 = "UPDATE services SET name_of_service='$nom', daily_price='$daily', weekly_price='$weekly', monthly_price='$monthly', Subscription_term='$term', manager='$manager', capacity='$capacity', service_image='$service_image' WHERE service_id='$id' ";
+	         $query_run2 = mysqli_query($connection, $query2);
+
+         }
+        
+	     if($query_run OR $query_run2)
 	     {
 		     $_SESSION['success'] = "Service data has been Updated";
 		     header('Location: all-services.php');
@@ -121,7 +216,7 @@ session_start();
 	     else
 	     {
              $_SESSION['status'] = "Service data has NOT been Updated";
-		     header('Location: php-code.php');		
+		     header('Location: all-services.php');		
 	     }
      }
 
@@ -150,13 +245,12 @@ session_start();
 	     }
      }
 
-
      //------------------------------- Delete Service -----------------------------
      if(isset($_POST['delete_service']))
      {
 	     $id = $_POST['service_id'];
 
-	     $query = "DELETE FROM services WHERE id_service='$id' ";
+	     $query = "DELETE FROM services WHERE service_id='$id' ";
 	     $query_run = mysqli_query($connection, $query);
 
 	     if($query_run)

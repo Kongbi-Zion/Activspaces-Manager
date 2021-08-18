@@ -20,50 +20,7 @@
 
     <?php include_once('nav_bar.php'); ?>
     
-            <div class="mobile-menu-area">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="mobile-menu">
-                                <nav id="dropdown">
-                                    <ul class="mobile-menu-nav">
-                                         <li>
-                            <a  href="index.php" title="Page d'accueil" href="index.php">
-                                   <span class="educate-icon educate-home icon-wrap"></span>
-                                   <span class="mini-click-non">Accueil</span>
-                                </a>
-                            
-                        </li>
-                                        <li><a href="events.php">Event</a></li>
-                                           <li>
-                            <a title="Organisez l'utilisation des services suivant une plage précise" href="events.html" aria-expanded="false"><span class="educate-icon educate-event icon-wrap sub-icon-mg" aria-hidden="true"></span> <span class="mini-click-non">Plage Horaire</span></a>
-                        </li>
-                        
-                        
-                        <li class="active">
-                            <a  title="Ayez une vue générale sur tous les Services" href="all-services.php" aria-expanded="false"><span class="educate-icon educate-course icon-wrap"></span> <span class="mini-click-non">Services</span></a>
-                            
-                        </li>
-                        
-                        
-                        <li>
-                            <a class="has-arrow" href="mailbox.html" aria-expanded="false"><span class="educate-icon educate-message icon-wrap"></span> <span class="mini-click-non">Messagerie</span></a>
-                            <ul class="submenu-angle" aria-expanded="false">
-                                <li><a title="Consulter votre boite de reception" href="https://mail.yahoo.com/d/folders/1?.intl=fr&.lang=fr-FR&.partner=none&.src=fp"><span class="mini-sub-pro">Boite de reception</span></a></li>
-                                <li><a title="Ecrire un nouveau mail" href="https://mail.yahoo.com/d/compose/3990533881"><span class="mini-sub-pro">Nouveau mail</span></a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a class="has-arrow" href="data-table.php" aria-expanded="false"><span class="educate-icon educate-interface icon-wrap"></span> <span class="mini-click-non">Historique</span></a>
-                    
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Mobile Menu end -->
+            
             <div class="breadcome-area">
                 <div class="container-fluid">
                     <div class="row">
@@ -93,7 +50,18 @@
         <div class="courses-area">
             <div class="container-fluid">
                 <div class="row">
-                    <?php
+
+                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="product-status-wrap drp-lst">
+                             <h2 class="m-0 font-weight-bold text-primary">List of Services offered by Activspaces</h2>
+                              <div class="add-product">
+                                <a type="button" href="add-service.php" class="pd-setting">Add new Service</a></h4>
+                              </div>
+                        </div>
+                     </div>
+
+                  
+                             <?php
 
                                   if(isset($_SESSION['success']) && $_SESSION['success'] !='')
                                  {
@@ -121,9 +89,9 @@
                              while($row = mysqli_fetch_assoc($query_run)) {        
                     ?>
                     <div id="Cow" class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                        <div class="courses-inner res-mg-b-30">
+                        <div class="courses-inner res-mg-b-30" style=" margin-bottom: 1.5rem;" >
                             <div class="courses-title">
-                                <a href="#"><img class="img1" src="img/courses/Coworking color.jpeg" alt=""></a>
+                                <a href="#"><img class="img1" src="img/courses/<?php echo $row['service_image']; ?>" alt=""></a>
                                 <h2><?php echo $row['name_of_service']; ?></h2>
                             </div>
                             <div class="courses-alaltic">
@@ -160,22 +128,25 @@
                                   </div>
                                 </div>
 
-                        <div class="product-buttons">
+                            <div class="product-buttons">
                                  <a href="edit_service.php?id=<?php echo $row['service_id']; ?> " class="btn btn-primary">Modifier</a>
                                  <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#<?php echo $row['service_id']; ?>">
                                       Supprimer
-                                 </button>
+                            </button>
 
                         </div>
                         </div>  
                     </div>
+                    
 
                                             <?php           
                                              }
                                           }
                                          ?>
                 </div>
+
             </div>
+        
         </div>
         <br><br><br><br>
         
