@@ -1,5 +1,4 @@
 <?php include_once('security.php'); ?>
-
 <!doctype html>
 <html class="no-js" lang="en">
 
@@ -9,8 +8,15 @@
     <title>Departments | Kiaalap - Kiaalap Admin Template</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <?php include_once('header_links.php'); ?>
+    <style type="text/css">
+    	 .form_validation{
+    	 	 margin-left: 18.4rem; 
+    	 	 margin-top: -15px; 
+    	 	 margin-bottom: 11px; 
+    	 	 color: red;" 
+    	 	}
+    </style>
 </head>
 
 <body>
@@ -63,9 +69,10 @@
 									                <div class="form-group row">
 											        	<label class="col-sm-3 col-form-label">Nom</label>
 											        	<div class="col-sm-7">
-											        	<input type="text" name="nom" value="<?php echo $row['nom'];  ?>" class="form-control" placeholder="nom">
+											        	     <input type="text" name="nom" value="<?php echo $row['nom'];  ?>" class="form-control" placeholder="nom">
 											            </div>
 											        </div>
+											        <div class="form_validation"><small>error</small></div>
 
 											        <div class="form-group row">
 											        	<label class="col-sm-3 col-form-label">Prenom</label>

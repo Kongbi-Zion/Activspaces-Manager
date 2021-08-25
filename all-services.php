@@ -47,6 +47,21 @@
                 </div>
             </div>
         </div>
+
+                                <?php
+
+                                  if(isset($_SESSION['success']) && $_SESSION['success'] !='')
+                                 {
+                                    echo '<h2 class="pd-setting text-white bg-success" style="margin-left: 4.5rem;">'. $_SESSION['success']. '</h2>';
+                                    unset($_SESSION['success']);
+                                 }
+
+                                 if(isset($_SESSION['status']) && $_SESSION['status'] !='')
+                                 {
+                                    echo '<h2 class="bg-danger text-white">'. $_SESSION['status']. '</h2>';
+                                    unset($_SESSION['status']);
+                                 }
+                            ?>
         <div class="courses-area">
             <div class="container-fluid">
                 <div class="row">
@@ -59,25 +74,6 @@
                               </div>
                         </div>
                      </div>
-
-                  
-                             <?php
-
-                                  if(isset($_SESSION['success']) && $_SESSION['success'] !='')
-                                 {
-                                    echo '<h2 class="pd-setting text-white">'. $_SESSION['success']. '</h2>';
-                                    unset($_SESSION['success']);
-                                 }
-
-                                 if(isset($_SESSION['status']) && $_SESSION['status'] !='')
-                                 {
-                                    echo '<h2 class="bg-danger text-white">'. $_SESSION['status']. '</h2>';
-                                    unset($_SESSION['status']);
-                                 }
-
-
-                            ?>
-
 
                     <?php
 
@@ -95,8 +91,7 @@
                                 <h2><?php echo $row['name_of_service']; ?></h2>
                             </div>
                             <div class="courses-alaltic">
-                                <span class="cr-ic-r"><span class="course-icon"><i class="fa fa-money"></i></span> <b><?php echo $row['daily_price'].' Xaf'.'/'.'jours,'. ' '. $row['weekly_price'].' Xaf'.'/'.'semaine,'. ' '. $row['monthly_price'].' Xaf'.'/'.'mois,'. ' '?></b></span><br><br>
-                                <p><span><i class="fa fa-calendar"></i></span> <b>Jours de semaine</b>
+                                <span class="cr-ic-r"><span class="course-icon"><i class="fa fa-money"></i></span> <b><?php echo $row['daily_price'].' Xaf'.'/'.'jours,'. ' '. $row['weekly_price'].' Xaf'.'/'.'semaine,'. ' '. $row['monthly_price'].' Xaf'.'/'.'mois,'. ' '?></b></span>
                             </div>
                             <div class="course-des">
                                 <p><span><i class="fa fa-clock"></i></span> <b>Durée d'abonnement:</b><?php echo $row['Subscription_term'] ?></p>

@@ -7,7 +7,7 @@
 
 <body>
     <?php include_once('side_bar.php'); ?>
-    
+     
     <?php include_once('nav_bar.php'); ?>
    
             <div class="breadcome-area">
