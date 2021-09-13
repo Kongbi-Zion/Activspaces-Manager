@@ -1,6 +1,6 @@
 <?php 
-   include_once('security.php');
-   include_once('db_connection.php');
+     include_once('security.php');
+     include_once('db_connection.php');
 
    //--------------------------- Searching client names -------------------------------
    if (isset($_POST['query'])) 

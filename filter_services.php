@@ -1,175 +1,157 @@
 <?php
      include_once('security.php'); 
-     include_once('db_connection.php');
+     include_once('db_connection.php');   
 
-               $current_year = date('Y'); 
-               $current_year_query = "SELECT year_name FROM year WHERE year_name='$current_year' ";
-               $current_year_query_run = mysqli_query($connection, $current_year_query);
-               
-               if ($current_year_query_run->num_rows > 0) {
-                }else{
-                     $current_year_insert = "INSERT INTO year (year_name) VALUES ('$current_year')";
-                     $current_year_insert_run = mysqli_query($connection, $current_year_insert);
-                }
-
-
-                // CONDITIONS TO DRAW THE GRAPH
-
-               if(isset($_SESSION['username']) && !(isset($_POST['filter']))){
-                $display = 'month';
-                $this_year = date('Y');
-               }
-
-               if(isset($_SESSION['username']) && isset($_POST['filter'])){
-                $from_date = $_POST['from_date'];
-                $to_date =  $_POST['to_date'];
-                $option = $_POST['selected_year'];
-
-                 if($from_date != '' && ($to_date == '' && $option == '')){
-                  $display = 'day';
-                  $this_year = date('Y');
-
-                  $query_day = "SELECT * FROM facture WHERE date_of_creation='$from_date' ";
-                  $query_day_run = mysqli_query($connection, $query_day);
-                 }
-
-                 if( ($from_date != '' && $to_date != '') && $option =='' ){
-                  $display = 'range';
-                  $this_year= date('Y');
-
-                     $range_of_days = "SELECT * FROM total_amount_per_day WHERE day BETWEEN '$from_date' AND '$to_date' ";
-                     $range_of_days_run = mysqli_query($connection, $range_of_days); 
-                 }
-
-                if($option != '' && ($from_date == '' && $to_date == '')){
-                  $display = 'year';
-                  $this_year = $option;
-                }
-
-                if(($from_date == '' && $to_date == '') && $option == ''){
-                    $this_year = date('Y');
-                    $display = 'month';
-                }
-   
-               }
-            
-
-            $query1 = "SELECT * FROM facture WHERE date_of_creation LIKE '___01/".$this_year."' ";
-            $query2 = "SELECT * FROM facture WHERE date_of_creation LIKE '___02/".$this_year."' ";
-            $query3 = "SELECT * FROM facture WHERE date_of_creation LIKE '___03/".$this_year."' ";
-            $query4 = "SELECT * FROM facture WHERE date_of_creation LIKE '___04/".$this_year."' ";
-            $query5 = "SELECT * FROM facture WHERE date_of_creation LIKE '___05/".$this_year."' ";
-            $query6 = "SELECT * FROM facture WHERE date_of_creation LIKE '___06/".$this_year."' ";
-            $query7 = "SELECT * FROM facture WHERE date_of_creation LIKE '___07/".$this_year."' ";  
-            $query8 = "SELECT * FROM facture WHERE date_of_creation LIKE '___08/".$this_year."' ";
-            $query9 = "SELECT * FROM facture WHERE date_of_creation LIKE '___09/".$this_year."' ";
-            $query10 = "SELECT * FROM facture WHERE date_of_creation LIKE '___10/".$this_year."' ";
-            $query11 = "SELECT * FROM facture WHERE date_of_creation LIKE '___11/".$this_year."' ";
-            $query12 = "SELECT * FROM facture WHERE date_of_creation LIKE '___12/".$this_year."' ";
-
-            $query_run1 = mysqli_query($connection, $query1);
-            $query_run2 = mysqli_query($connection, $query2);
-            $query_run3 = mysqli_query($connection, $query3);
-            $query_run4 = mysqli_query($connection, $query4);
-            $query_run5 = mysqli_query($connection, $query5);
-            $query_run6 = mysqli_query($connection, $query6);
-            $query_run7 = mysqli_query($connection, $query7);
-            $query_run8 = mysqli_query($connection, $query8);
-            $query_run9 = mysqli_query($connection, $query9);
-            $query_run10 = mysqli_query($connection, $query10);
-            $query_run11 = mysqli_query($connection, $query11);
-            $query_run12 = mysqli_query($connection, $query12);
-           
+     $total_service_amount_per_month = array();
+     $total_service_amount_per_day = array();
+     $total_service_amount_per_range = array();
+     $total_service_amount_for_particular_month = array();
+     $total_service_amount_for_particular_year = array();
      
-             $January = 0; $February = 0; $March = 0; $April = 0; $May = 0; $June = 0; $July = 0; $August = 0; $September = 0; $October = 0; $November = 0; $December = 0;
+     // total income from a particular service per month
+     $query_services = "SELECT service_id, name_of_service FROM services "; 
+     $query_services_run = mysqli_query($connection, $query_services);
 
-             $year = date('Y');
+     if(mysqli_num_rows($query_services_run) > 0)
+       {
+         while($row = mysqli_fetch_array($query_services_run))
+         {
+           $services_id = $row['service_id'];
+           $name_of_service = $row['name_of_service'];
+           $current_amount = "SELECT SUM(amount) AS total_services_amount FROM facture WHERE id_service='$services_id' "; 
+           $current_amount_run = mysqli_query($connection, $current_amount);
+           if($current_amount_run->num_rows > 0) {
+             $service_amount = $current_amount_run->fetch_assoc();
+             $amount_per_service = $service_amount['total_services_amount'];
+             if($amount_per_service == ''){
+               $amount_per_service = 0;
+             }
+             $total_service_amount_per_month[$name_of_service] = $amount_per_service;
+           }
+         }
+       }
 
-             if(mysqli_num_rows($query_run1) > 0)
-               {
-                   while($row = mysqli_fetch_array($query_run1))
-                   {
-                     $January += intval($row['amount']);
-                   }
+    // conditions to display graph
+     if(isset($_SESSION['username']) && !(isset($_POST['filter']))){
+       $display = 'month';
+     }  
+
+     if(isset($_SESSION['username']) && isset($_POST['filter'])){
+       $from_date = $_POST['from_date'];
+       $to_date =  $_POST['to_date'];
+       $option = $_POST['selected_year'];
+       $search_month = $_POST['month'];
+
+
+       if($from_date != '' && ($to_date == '' && $option == '')){
+         $display = 'day';
+         $query_services = "SELECT service_id, name_of_service FROM services "; 
+         $query_services_run = mysqli_query($connection, $query_services);
+         if(mysqli_num_rows($query_services_run) > 0)
+         {
+           while($row = mysqli_fetch_array($query_services_run))
+           {
+             $services_id = $row['service_id'];
+             $name_of_service = $row['name_of_service'];
+             $current_amount = "SELECT SUM(amount) AS total_services_amount FROM facture WHERE date_of_creation='$from_date' AND id_service='$services_id' "; 
+             $current_amount_run = mysqli_query($connection, $current_amount);
+             if($current_amount_run->num_rows > 0) {
+               $service_amount = $current_amount_run->fetch_assoc();
+               $amount_per_service = $service_amount['total_services_amount'];
+               if($amount_per_service == ''){
+                 $amount_per_service = 0;
                }
-               if(mysqli_num_rows($query_run2) > 0)
-               {
-                   while($row = mysqli_fetch_array($query_run2))
-                   {
-                     $February += intval($row['amount']);
-                   }
+               $total_service_amount_per_day[$name_of_service] = $amount_per_service;
+             }
+           }
+         }
+       }
+
+
+       if( ($from_date != '' && $to_date != '') && $option =='' ){
+         $display = 'range';
+         $query_services = "SELECT service_id, name_of_service FROM services "; 
+         $query_services_run = mysqli_query($connection, $query_services);
+         if(mysqli_num_rows($query_services_run) > 0)
+         {
+           while($row = mysqli_fetch_array($query_services_run))
+           {
+             $services_id = $row['service_id'];
+             $name_of_service = $row['name_of_service'];
+             $current_amount = "SELECT SUM(amount) AS total_services_amount FROM facture WHERE date_of_creation BETWEEN '$from_date' AND '$to_date' AND id_service='$services_id' "; 
+             $current_amount_run = mysqli_query($connection, $current_amount);
+             if($current_amount_run->num_rows > 0) {
+               $service_amount = $current_amount_run->fetch_assoc();
+               $amount_per_service = $service_amount['total_services_amount'];
+               if($amount_per_service == ''){
+                 $amount_per_service = 0;
                }
-               if(mysqli_num_rows($query_run3) > 0)
-               {
-                   while($row = mysqli_fetch_array($query_run3))
-                   {
-                     $March += intval($row['amount']);
-                   }
+               $total_service_amount_per_range[$name_of_service] = $amount_per_service;
+             }
+           }
+         }
+       }
+
+
+       if( ($search_month !='' && $option !='') && ($from_date == '' && $to_date == '') ){
+         $display = 'particular_month';
+         $new_date = $search_month .'/'. $option;
+         $query_services = "SELECT service_id, name_of_service FROM services "; 
+         $query_services_run = mysqli_query($connection, $query_services);
+         if(mysqli_num_rows($query_services_run) > 0)
+         {
+           while($row = mysqli_fetch_array($query_services_run))
+           {
+             $services_id = $row['service_id'];
+             $name_of_service = $row['name_of_service'];
+             $current_amount = "SELECT SUM(amount) AS total_services_amount FROM facture WHERE id_service='$services_id' AND date_of_creation LIKE '___".$new_date."' "; 
+             $current_amount_run = mysqli_query($connection, $current_amount);
+             if($current_amount_run->num_rows > 0) {
+               $service_amount = $current_amount_run->fetch_assoc();
+               $amount_per_service = $service_amount['total_services_amount'];
+               if($amount_per_service == ''){
+                 $amount_per_service = 0;
                }
-               if(mysqli_num_rows($query_run4) > 0)
-               {
-                   while($row = mysqli_fetch_array($query_run4))
-                   {
-                     $April += intval($row['amount']);
-                   }
+               $total_service_amount_for_particular_month[$name_of_service] = $amount_per_service;
+             }
+           }
+         }
+       }
+
+
+
+       if( ($search_month =='' && $option !='') && ($from_date == '' && $to_date == '') ){
+         $display = 'particular_year';
+         $query_services = "SELECT service_id, name_of_service FROM services "; 
+         $query_services_run = mysqli_query($connection, $query_services);
+         if(mysqli_num_rows($query_services_run) > 0)
+         {
+           while($row = mysqli_fetch_array($query_services_run))
+           {
+             $services_id = $row['service_id'];
+             $name_of_service = $row['name_of_service'];
+             $current_amount = "SELECT SUM(amount) AS total_services_amount FROM facture WHERE id_service='$services_id' AND date_of_creation LIKE '%".$option."' "; 
+             $current_amount_run = mysqli_query($connection, $current_amount);
+             if($current_amount_run->num_rows > 0) {
+               $service_amount = $current_amount_run->fetch_assoc();
+               $amount_per_service = $service_amount['total_services_amount'];
+               if($amount_per_service == ''){
+                 $amount_per_service = 0;
                }
-               if(mysqli_num_rows($query_run5) > 0)
-               {
-                   while($row = mysqli_fetch_array($query_run5))
-                   {
-                     $May += intval($row['amount']);
-                   }
-               }
-               if(mysqli_num_rows($query_run6) > 0)
-               {
-                   while($row = mysqli_fetch_array($query_run6))
-                   {
-                     $June += intval($row['amount']);
-                   }
-               }
-               if(mysqli_num_rows($query_run7) > 0)
-               {
-                   while($row = mysqli_fetch_array($query_run7))
-                   {
-                     $July += intval($row['amount']);
-                   }
-               }
-               if(mysqli_num_rows($query_run8) > 0)
-               {
-                   while($row = mysqli_fetch_array($query_run8))
-                   {
-                     $August += intval($row['amount']);
-                   }
-               }
-               if(mysqli_num_rows($query_run9) > 0)
-               {
-                   while($row = mysqli_fetch_array($query_run9))
-                   {
-                     $September += intval($row['amount']);
-                   }
-               }
-               if(mysqli_num_rows($query_run10) > 0)
-               {
-                   while($row = mysqli_fetch_array($query_run10))
-                   {
-                     $October += intval($row['amount']);
-                   }
-               }
-               if(mysqli_num_rows($query_run11) > 0)
-               {
-                   while($row = mysqli_fetch_array($query_run11))
-                   {
-                     $November += intval($row['amount']);
-                   }
-               }
-               if(mysqli_num_rows($query_run12) > 0)
-               {
-                   while($row = mysqli_fetch_array($query_run12))
-                   {
-                     $December += intval($row['amount']);
-                   }
-               }             
-          ?>
+               $total_service_amount_for_particular_year[$name_of_service] = $amount_per_service;
+             }
+           }
+         }
+       }
+
+
+  
+  
+
+    }
+
+
+ ?>
 
 
 <!doctype html>
@@ -183,8 +165,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php include_once('header_links.php'); ?>  
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
-    <!------------------------------------------------- Default graph --------------------------------------------->  
+     <!------------------------------------------------- Default graph --------------------------------------------->  
     <script type="text/javascript">
       var display = '<?= $display ?>';
       google.charts.load("current", {"packages":["bar"]});
@@ -192,122 +173,127 @@
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
         ["Year", "Amount", { role: "style" } ],
-        ["January", <?php  echo $January; ?>, "color: gray"],
-        ["February", <?php echo $February; ?>, "color: gray"],
-        ["March", <?php echo $March; ?>, "color: gray"],
-        ["April", <?php echo $April; ?>, "color: gray"],
-        ["May", <?php echo $May; ?>, "color: gray"],
-        ["June", <?php echo $June; ?>, "color: gray"],
-        ["July", <?php echo $July; ?>, "color: gray"],
-        ["August", <?php echo $August; ?>, "color: gray"],
-        ["September", <?php echo $September; ?>, "color: gray"],
-        ["October", <?php echo $October; ?>, "color: gray"],
-        ["November", <?php echo $November; ?>, "color: gray"],
-        ["December", <?php echo $December; ?>, "color: gray"]
+        <?php
+          foreach ($total_service_amount_per_month as $service_names => $amount_total) {
+             echo "['" .$service_names. "'," .$amount_total. ", 'color: gray'],";
+          }
+        ?>
       ]);
         var options = {    
-           title: "Company Income",
+           title: "Company Service total Income",
         };
         var chart = new google.charts.Bar(document.getElementById("columnchart_material"));
         chart.draw(data, google.charts.Bar.convertOptions(options));
   }       
     </script>
- <!---------------------------------X---------------- Default graph -----------------X----------------------------> 
+ <!---------------------------------X---------------- Default graph -----------------X---------------------------->
 
-
- <!------------------------------------------------- Year graph --------------------------------------------->  
+   <!------------------------------------------------- Day graph --------------------------------------------->  
     <script type="text/javascript">
       var display = '<?= $display ?>';
       google.charts.load("current", {"packages":["bar"]});
       google.charts.setOnLoadCallback(drawChart);
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-        ["Year", "Amount", { role: "style" } ],
-        ["January", <?php  echo $January; ?>, "color: gray"],
-        ["February", <?php echo $February; ?>, "color: gray"],
-        ["March", <?php echo $March; ?>, "color: gray"],
-        ["April", <?php echo $April; ?>, "color: gray"],
-        ["May", <?php echo $May; ?>, "color: gray"],
-        ["June", <?php echo $June; ?>, "color: gray"],
-        ["July", <?php echo $July; ?>, "color: gray"],
-        ["August", <?php echo $August; ?>, "color: gray"],
-        ["September", <?php echo $September; ?>, "color: gray"],
-        ["October", <?php echo $October; ?>, "color: gray"],
-        ["November", <?php echo $November; ?>, "color: gray"],
-        ["December", <?php echo $December; ?>, "color: gray"]
+        ["Day", "Amount", { role: "style" } ],
+        <?php
+          foreach ($total_service_amount_per_day as $service_names => $amount_total) {
+             echo "['" .$service_names. "'," .$amount_total. ", 'color: gray'],";
+          }
+        ?>
       ]);
-        if(display == 'year'){
+        if(display == 'day')
+        {
            var options = {    
-              title: "Company Income",
+             title: "Total Company Services Income For Selected Day" ,
            };
            var chart = new google.charts.Bar(document.getElementById("columnchart_material"));
            chart.draw(data, google.charts.Bar.convertOptions(options));
-      }
+        }
   }       
     </script>
- <!---------------------------------X---------------- Year graph -----------------X----------------------------> 
-      
-<!------------------------------------------------- Day graph --------------------------------------------->  
-<script type="text/javascript">
-   var display = '<?= $display ?>';
-     google.charts.load("current", {"packages":["bar"]});
-     google.charts.setOnLoadCallback(drawChart);
-     function drawChart() {
-     var data2 = google.visualization.arrayToDataTable([
-         ["Day", "Amount", { role: "style" } ],
-         <?php
-           if(mysqli_num_rows($query_day_run) > 0)
-           {
-             while($row = mysqli_fetch_array($query_day_run))
-             {
-               echo "['" .$row['time_created']. "'," .$row['amount']. ", 'color: gray'],";
-             }
-           }
-         ?>
+ <!---------------------------------X---------------- Day graph -----------------X---------------------------->
+
+ <!------------------------------------------------- Range of Days graph --------------------------------------------->  
+    <script type="text/javascript">
+      var display = '<?= $display ?>';
+      google.charts.load("current", {"packages":["bar"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+        ["Day", "Amount", { role: "style" } ],
+        <?php
+          foreach ($total_service_amount_per_range as $service_names => $amount_total) {
+             echo "['" .$service_names. "'," .$amount_total. ", 'color: gray'],";
+          }
+        ?>
       ]);
-      if(display == 'day'){
-        var option2 = {    
-           title: "Company Income",
-        };
-        var chart2 = new google.charts.Bar(document.getElementById("columnchart_material"));
-        chart2.draw(data2, google.charts.Bar.convertOptions(option2));
-      }
-  }    
-</script>
-<!---------------------------------X---------------- Day graph -----------------X---------------------------->
+        if(display == 'range')
+        {
+           var options = {    
+             title: "Total Company Services Income For Range Of Days Selected" ,
+           };
+           var chart = new google.charts.Bar(document.getElementById("columnchart_material"));
+           chart.draw(data, google.charts.Bar.convertOptions(options));
+        }
+  }       
+    </script>
+ <!---------------------------------X---------------- Range of Days graph -----------------X---------------------------->
 
-
-
-<!------------------------------------------------- Range graph --------------------------------------------->  
-
-
-<script type="text/javascript">
-   var display = '<?= $display ?>';
-     google.charts.load("current", {"packages":["bar"]});
-     google.charts.setOnLoadCallback(drawChart);
-     function drawChart() {
-     var data3 = google.visualization.arrayToDataTable([
-         ["Range of days", "Amount", { role: "style" } ],
-         <?php 
-           if(mysqli_num_rows($range_of_days_run) > 0)
-           {
-             while($row = mysqli_fetch_array($range_of_days_run))
-             {
-               echo "['" .$row['day']. "'," .$row['amount']. ", 'color: gray'],";
-             }
-           }
-         ?>
+ <!------------------------------------------------- Graph For a particular Month --------------------------------------------->  
+    <script type="text/javascript">
+      var display = '<?= $display ?>';
+      google.charts.load("current", {"packages":["bar"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+        ["Day", "Amount", { role: "style" } ],
+        <?php
+          foreach ($total_service_amount_for_particular_month as $service_names => $amount_total) {
+             echo "['" .$service_names. "'," .$amount_total. ", 'color: gray'],";
+          }
+        ?>
       ]);
-      if(display == 'range'){
-        var option3 = {    
-           title: "Company Income",
-        };
-        var chart3 = new google.charts.Bar(document.getElementById("columnchart_material"));
-        chart3.draw(data3, google.charts.Bar.convertOptions(option3));
-      }
-  }    
-</script>
-<!---------------------------------X---------------- Range graph -----------------X----------------------------> 
+        if(display == 'particular_month')
+        {
+           var options = {    
+             title: "Total Company Services Income For Selected Month And Year" ,
+           };
+           var chart = new google.charts.Bar(document.getElementById("columnchart_material"));
+           chart.draw(data, google.charts.Bar.convertOptions(options));
+        }
+  }       
+    </script>
+ <!---------------------------------X---------------- Graph For a particular Month -----------------X----------------------------> 
+
+
+
+ <!------------------------------------------------- Graph For a particular year --------------------------------------------->  
+    <script type="text/javascript">
+      var display = '<?= $display ?>';
+      google.charts.load("current", {"packages":["bar"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+        ["Day", "Amount", { role: "style" } ],
+        <?php
+          foreach ($total_service_amount_for_particular_year as $service_names => $amount_total) {
+             echo "['" .$service_names. "'," .$amount_total. ", 'color: gray'],";
+          }
+        ?>
+      ]);
+        if(display == 'particular_year')
+        {
+           var options = {    
+             title: "Total Company Services Income For Selected Year" ,
+           };
+           var chart = new google.charts.Bar(document.getElementById("columnchart_material"));
+           chart.draw(data, google.charts.Bar.convertOptions(options));
+        }
+  }       
+    </script>
+ <!---------------------------------X---------------- Graph For a particular year -----------------X----------------------------> 
+
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>     
@@ -374,6 +360,11 @@ while($row = $data->fetch(PDO::FETCH_ASSOC)){
   $tab_period[] = $mois;
   $tab_montant[] =$montant;
 }
+// while($row = $data->fetch(PDO::FETCH_ASSOC)){
+//   extract($row);
+//   $tab_period[] = $periode;
+//   $tab_montant[] = $montant;
+// }
 
 
 $abonnement = $bdd->prepare('SELECT id_abonnement FROM abonnement');
@@ -555,13 +546,30 @@ $percentage6 = (int) ($montant6*100/$num);
 
             </div>
      </div>
-            <div class="container" style="width:800px; margin-left: 25rem; margin-top: 5rem; margin-bottom: -5rem;">
+            <div class="container" style="width:800px; margin-left: 18rem; margin-top: 5rem; margin-bottom: -5rem;">
               <form action="#" method="POST">
                 <div class="col-md-2">  
                      <input type="text" name="from_date" id="from_date" class="form-control" placeholder="From Date" style="border-radius: 8px;" />  
                 </div>  
                 <div class="col-md-2">  
                      <input type="text" name="to_date" id="to_date" class="form-control" placeholder="To Date" style="border-radius: 8px;" />  
+                </div> 
+                 <div class="col-md-2">  
+                     <select class="form-control form-control-lg" style="border-radius: 8px;" name="month">
+                       <option value="">Month</option>
+                       <option value="01">January</option>
+                       <option value="02">February</option>
+                       <option value="03">March</option>
+                       <option value="04">April</option>
+                       <option value="05">May</option>
+                       <option value="06">June</option>
+                       <option value="07">July</option>
+                       <option value="08">August</option>
+                       <option value="09">September</option>
+                       <option value="10">October</option>
+                       <option value="11">November</option>
+                       <option value="12">December</option>
+                     </select>  
                 </div> 
                 <div class="col-md-3">  
                      <select class="form-control form-control-lg" style="border-radius: 8px;" name="selected_year">

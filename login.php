@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Login | ActivSpaces Manager</title>
+    <title>Login | ActivSpaces Manager (ASM)</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php include_once('header_links.php'); ?>
@@ -37,16 +37,17 @@
                         <form action="php-code.php" id="loginForm" method="POST">
 
                             <div class="form-group">
-                                <label class="control-label" for="username">Username</label>
-                                <input type="text" placeholder="enter username" title="Please enter you username" required="required" value="" name="username" id="username" class="form-control">
-                                <span class="help-block small">Your unique username to app</span>
+                                <label class="control-label" for="password">Usrename</label>
+                                <input type="text" placeholder="Enter Username" required="required" value="" name="username" class="form-control">
+                                <span class="help-block small">Your Username</span>
                             </div>
-
                             <div class="form-group">
                                 <label class="control-label" for="password">Password</label>
                                 <input type="password" title="Please enter your password" placeholder="******" required="" value="" name="password" id="password" class="form-control">
                                 <span class="help-block small">Yur strong password</span>
                             </div>
+
+                            
 
                             <div class="checkbox login-checkbox">
 

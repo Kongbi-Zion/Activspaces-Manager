@@ -5,18 +5,10 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Departments | Kiaalap - Kiaalap Admin Template</title>
+    <title>Edit Client Data | Activspaces Manager (ASM)</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php include_once('header_links.php'); ?>
-    <style type="text/css">
-    	 .form_validation{
-    	 	 margin-left: 18.4rem; 
-    	 	 margin-top: -15px; 
-    	 	 margin-bottom: 11px; 
-    	 	 color: red;" 
-    	 	}
-    </style>
 </head>
 
 <body>
@@ -44,24 +36,19 @@
 											<br><br>
 											
 
-												<?php
+												         <?php
 
-									                  // 	EDDITING DATA
+									                     // EDDITING DATA
 
 												         include_once('db_connection.php');
-
 									                     if(isset($_GET['id']))
 									                     {
-
 										                    $id = $_GET['id'];
-										
-
 															$query = "SELECT * FROM client WHERE id_client='$id' ";
 															$query_run = mysqli_query($connection, $query);
-
 															foreach ($query_run as $row) 
 															{
-																?>
+														 ?>
 									            <form action="php-code.php" method="POST">
 
 									            	<input type="hidden" name="edit_id" value="<?php echo $row['id_client'];  ?>" >
@@ -69,36 +56,34 @@
 									                <div class="form-group row">
 											        	<label class="col-sm-3 col-form-label">Nom</label>
 											        	<div class="col-sm-7">
-											        	     <input type="text" name="nom" value="<?php echo $row['nom'];  ?>" class="form-control" placeholder="nom">
+											        	     <input type="text" name="nom" value="<?php echo $row['nom'];  ?>" class="form-control" placeholder="nom" pattern="[A-Za-z\.]{3,15}" title="Eqaul to or more than 3 letters" required>
 											            </div>
 											        </div>
-											        <div class="form_validation"><small>error</small></div>
-
 											        <div class="form-group row">
 											        	<label class="col-sm-3 col-form-label">Prenom</label>
 											        	<div class="col-sm-7">
-											        	<input type="text" name="prenom" value="<?php echo $row['prenom'];  ?>" class="form-control" placeholder="Prenom">
+											        	<input type="text" name="prenom" value="<?php echo $row['prenom'];  ?>" class="form-control" placeholder="Prenom" pattern="[A-Za-z\.]{3,15}" title="Eqaul to or more than 3 letters" required>
 											            </div>
 											        </div>
 
 											         <div class="form-group row">
 											        	<label class="col-sm-3 col-form-label">Phone</label>
 											        	<div class="col-sm-7">
-											        	<input type="number" name="phone" value="<?php echo $row['phone'];  ?>" class="form-control" placeholder="Phone">
+											        	<input type="text" name="phone" value="<?php echo $row['phone'];  ?>" class="form-control" placeholder="Phone" pattern="[0-9]{9,12}" title="Between 9 and 12 numbers" required>
 											            </div>
 											        </div>
 
 											        <div class="form-group row">
 											        	<label class="col-sm-3 col-form-label">Email</label>
 											        	<div class="col-sm-7">
-											        	<input type="email" name="email" value="<?php echo $row['email'];  ?>" class="form-control" placeholder="Email">
+											        	<input type="email" name="email" value="<?php echo $row['email'];  ?>" class="form-control" placeholder="Email" required>
 											            </div>
 											        </div>
 
 											         <div class="form-group row">
 											        	<label class="col-sm-3 col-form-label">Entreprise</label>
 											        	<div class="col-sm-7">
-											        	<input type="text" name="entreprise" value="<?php echo $row['entreprise'];  ?>" class="form-control" placeholder="Entreprise">
+											        	<input type="text" name="entreprise" value="<?php echo $row['entreprise'];  ?>" class="form-control" placeholder="Entreprise" pattern="[A-Za-z\.]{3,15}" title="Eqaul to or more than 3 letters" required>
 											            </div>
 											        </div>
 
@@ -111,21 +96,21 @@
 											         <div class="form-group row">
 											        	<label class="col-sm-3 col-form-label">RC</label>
 											        	<div class="col-sm-7">
-											        	<input type="number" name="RC" value="<?php echo $row['RC'];  ?>" class="form-control" placeholder="RC">
+											        	<input type="number" name="RC" value="<?php echo $row['RC'];  ?>" class="form-control" placeholder="RC" required>
 											            </div>
 											        </div>
 
 											        <div class="form-group row">
 											        	<label class="col-sm-3 col-form-label">BP</label>
 											        	<div class="col-sm-7">
-											        	<input type="text" name="BP" value="<?php echo $row['BP'];  ?>" class="form-control" placeholder="BP">
+											        	<input type="text" name="BP" value="<?php echo $row['BP'];  ?>" class="form-control" placeholder="BP" required>
 											            </div>
 											        </div>
 
 											         <div class="form-group row">
 											        	<label class="col-sm-3 col-form-label">NIU</label>
 											        	<div class="col-sm-7">
-											        	<input type="text" name="NIU" value="<?php echo $row['NIU'];  ?>" class="form-control" placeholder="NIU">
+											        	<input type="text" name="NIU" value="<?php echo $row['NIU'];  ?>" class="form-control" placeholder="NIU" required>
 											            </div>
 											        </div>
 

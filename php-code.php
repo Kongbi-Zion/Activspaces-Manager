@@ -2,7 +2,7 @@
 session_start();
 
      include_once('db_connection.php');
-
+     
      //-------------------------- User login verification -------------------------------
      if(isset($_POST['login_btn']))
      {
@@ -39,7 +39,7 @@ session_start();
      if(isset($_POST['add'])) 
      {
     	 $id = $_POST['edit_id'];
-	     $nom = $_POST['nom'];
+	     $nom = $_POST['nom'];  
 	     $prenom = $_POST['prenom'];
 	     $phone = $_POST['phone'];
 	     $email = $_POST['email'];
@@ -91,6 +91,16 @@ session_start();
              	 $fileDestination = 'img/courses/'.$fileNewName;
                  move_uploaded_file($fileTempName, $fileDestination);
                  $service_image = $fileNewName;
+
+                // Removing an image
+                 $query_image = "SELECT service_image FROM services WHERE name_of_service='$nom' ";
+                 $query_image_run = mysqli_query($connection, $query_image);
+                 if ($query_image_run->num_rows > 0) {
+                     $image = $query_image_run->fetch_assoc();
+                     $deleted_image = $image['service_image'];
+                     $path = 'img/courses/'.$deleted_image;
+                     unlink($path);
+                   }
 
                   $query = "INSERT INTO services (name_of_service, daily_price, weekly_price, monthly_price, Subscription_term, manager, capacity, service_image) VALUES ('$nom', '$daily', '$weekly', '$monthly', '$term', '$manager', '$capacity', '$service_image')";
 	             $query_run = mysqli_query($connection, $query);
@@ -166,7 +176,7 @@ session_start();
 	     $manager = $_POST['manager'];
 	     $capacity = $_POST['capacity'];
 	     $filename = $_FILES['file']['name'];
-
+  
 	     if($filename !='')
 	     {
 	     	 $fileTempName = $_FILES['file']['tmp_name'];
@@ -180,6 +190,16 @@ session_start();
              	 $fileDestination = 'img/courses/'.$fileNewName;
                  move_uploaded_file($fileTempName, $fileDestination);
                  $service_image = $fileNewName;
+
+                 // Removing an image
+                 $query_image = "SELECT service_image FROM services WHERE service_id='$id' ";
+                 $query_image_run = mysqli_query($connection, $query_image);
+                 if ($query_image_run->num_rows > 0) {
+                     $image = $query_image_run->fetch_assoc();
+                     $deleted_image = $image['service_image'];
+                     $path = 'img/courses/'.$deleted_image;
+                     unlink($path);
+                   }
 
                  $query = "UPDATE services SET name_of_service='$nom', daily_price='$daily', weekly_price='$weekly', monthly_price='$monthly', Subscription_term='$term', manager='$manager', capacity='$capacity', service_image='$service_image' WHERE service_id='$id' ";
 	             $query_run = mysqli_query($connection, $query);

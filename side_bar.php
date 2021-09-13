@@ -40,7 +40,7 @@
                                 <li><a title="Ecrire un nouveau mail" href="https://mail.yahoo.com/d/compose/3990533881"><span class="mini-sub-pro">Nouveau mail</span></a></li>
                             </ul>
                         </li>
-
+                        
                         <li>
                             <a class="active" href="facture.php" aria-expanded="false"><span class="educate-icon educate-interface icon-wrap"></span> <span class="mini-click-non">Facture</span></a>
                         </li>
@@ -48,7 +48,7 @@
                         <li>
                             <a class="active" href="history.php" aria-expanded="false"><span class="educate-icon educate-interface icon-wrap"></span> <span class="mini-click-non">Historique</span></a>
                         </li>
-                            
+
                     </ul>
                 </nav>
             </div>

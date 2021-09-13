@@ -1,5 +1,5 @@
 <?php
-session_start();
+include_once('security.php'); 
 ob_start();
 ?>
 
@@ -9,10 +9,9 @@ ob_start();
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Departments | Kiaalap - Kiaalap Admin Template</title>
+    <title>Invoice List For client | Activspaces Manager (ASM)</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
      <?php include_once('header_links.php'); ?>
 </head>
 
@@ -75,7 +74,9 @@ ob_start();
                                     if ($query_run2->num_rows > 0) {
                                 
                                 ?>
-                            <h4>Invoice List For  <?php echo '  ' .$nom. '  '.$prenom; ?></h4>
+                                <br>
+                                <h2 class="m-0 font-weight-bold text-primary">Invoice List For  <?php echo '  ' .$nom. '  '.$prenom; ?></h2>
+                                <br>
                             <div class="asset-inner">
                                 <table>
                                     <tr>

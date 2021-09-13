@@ -1,4 +1,5 @@
 <?php
+     include_once('security.php');
      include_once('db_connection.php');
  if(isset($_POST["query"]))
 {

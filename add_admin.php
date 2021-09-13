@@ -1,10 +1,13 @@
 <?php include_once('security.php'); ?>
-
-
 <!doctype html>
 <html class="no-js" lang="en">
 
 <head>
+	<meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Add New Client | Activspaces Manager (ASM)</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php include_once('header_links.php'); ?>
 </head>
 
@@ -34,35 +37,35 @@
 			                <div class="form-group row">
 					        	<label class="col-sm-3 col-form-label">Nom</label>
 					        	<div class="col-sm-7">
-					        	<input type="text" name="nom" value="" class="form-control" placeholder="nom">
+					        	<input type="text" name="nom" value="" class="form-control" placeholder="nom" pattern="[A-Za-z\.]{3,15}" title="Eqaul to or more than 3 letters" required>
 					            </div>
 					        </div>
 
 					        <div class="form-group row">
 					        	<label class="col-sm-3 col-form-label">Prenom</label>
 					        	<div class="col-sm-7">
-					        	<input type="text" name="prenom" value="" class="form-control" placeholder="Prenom">
+					        	<input type="text" name="prenom" value="" class="form-control" placeholder="Prenom" pattern="[A-Za-z\.]{3,15}" title="Eqaul to or more than 3 letters" required>
 					            </div>
 					        </div>
 
 					         <div class="form-group row">
 					        	<label class="col-sm-3 col-form-label">Phone</label>
 					        	<div class="col-sm-7">
-					        	<input type="number" name="phone" value="" class="form-control" placeholder="Phone">
+					        	<input type="number" name="text" value="" class="form-control" placeholder="Phone" pattern="[0-9]{9,12}" title="Between 9 and 12 numbers" required>
 					            </div>
 					        </div>
 
 					        <div class="form-group row">
 					        	<label class="col-sm-3 col-form-label">Email</label>
 					        	<div class="col-sm-7">
-					        	<input type="email" name="email" value="" class="form-control" placeholder="Email">
+					        	<input type="email" name="email" value="" class="form-control" placeholder="Email" required>
 					            </div>
 					        </div>
 
 					         <div class="form-group row">
 					        	<label class="col-sm-3 col-form-label">Entreprise</label>
 					        	<div class="col-sm-7">
-					        	<input type="text" name="entreprise" value="" class="form-control" placeholder="Entreprise">
+					        	<input type="text" name="entreprise" value="" class="form-control" placeholder="Entreprise" pattern="[A-Za-z\.]{3,15}" title="Eqaul to or more than 3 letters" required>
 					            </div>
 					        </div>
 
@@ -75,21 +78,21 @@
 					         <div class="form-group row">
 					        	<label class="col-sm-3 col-form-label">RC</label>
 					        	<div class="col-sm-7">
-					        	<input type="number" name="RC" value="" class="form-control" placeholder="RC">
+					        	<input type="number" name="RC" value="" class="form-control" placeholder="RC" required>
 					            </div>
 					        </div>
 
 					        <div class="form-group row">
 					        	<label class="col-sm-3 col-form-label">BP</label>
 					        	<div class="col-sm-7">
-					        	<input type="text" name="BP" value="" class="form-control" placeholder="BP">
+					        	<input type="text" name="BP" value="" class="form-control" placeholder="BP" required>
 					            </div>
 					        </div>
 
 					         <div class="form-group row">
 					        	<label class="col-sm-3 col-form-label">NIU</label>
 					        	<div class="col-sm-7">
-					        	<input type="text" name="NIU" value="" class="form-control" placeholder="NIU">
+					        	<input type="text" name="NIU" value="" class="form-control" placeholder="NIU" required>
 					            </div>
 					        </div>
                             

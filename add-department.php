@@ -1,9 +1,12 @@
 <?php include_once('security.php'); ?>
-
 <!doctype html>
 <html class="no-js" lang="en">
-
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Invoice List For client | Activspaces Manager (ASM)</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
    <?php include_once('header_links.php'); ?>
 </head>
 
@@ -13,7 +16,8 @@
 
     <?php include_once('nav_bar.php'); ?>
 
-        <br><br><br><br>        
+        <br><br><br><br>    
+            
         <!-- Single pro tab review Start-->
         <div class="single-pro-review-area mt-t-30 mg-b-15">
             <div class="container-fluid">
@@ -82,7 +86,6 @@
        
        <?php include_once('footer.php'); ?>
     </div>
-
 <?php include_once('footer_links.php'); ?>
 </body>
 

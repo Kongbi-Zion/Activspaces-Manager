@@ -1,11 +1,10 @@
 <?php include_once('security.php'); ?>
 <!doctype html>
 <html class="no-js" lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Departments | Kiaalap - Kiaalap Admin Template</title>
+    <title>Services | Activspaces Manager (ASM)</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -79,56 +78,56 @@
                                   <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Name</label>
                                 <div class="col-sm-7">
-                                <input type="text" name="nom" value="" class="form-control" placeholder="nom">
+                                <input type="text" name="nom" value="" class="form-control" placeholder="nom" pattern="[A-Za-z\.]{3,15}" title="Eqaul to or more than 3 letters" required>
                                   </div>
                               </div>
 
                               <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Daily Price</label>
                                 <div class="col-sm-7">
-                                <input type="number" name="daily" value="" class="form-control" placeholder="Daily Price">
+                                <input type="number" name="daily" value="" class="form-control" placeholder="Daily Price" required>
                                   </div>
                               </div>
 
                                <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Weekly Price</label>
                                 <div class="col-sm-7">
-                                <input type="number" name="weekly" value="" class="form-control" placeholder="Weekly Price">
+                                <input type="number" name="weekly" value="" class="form-control" placeholder="Weekly Price" required>
                                   </div>
                               </div>
 
                               <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Monthly Price</label>
                                 <div class="col-sm-7">
-                                <input type="number" name="monthly" value="" class="form-control" placeholder="Monthly Price">
+                                <input type="number" name="monthly" value="" class="form-control" placeholder="Monthly Price" required>
                                   </div>
                               </div>
 
                                <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Subscription term</label>
                                 <div class="col-sm-7">
-                                <input type="text" name="term" value="" class="form-control" placeholder="Subscription term">
+                                <input type="text" name="term" value="" class="form-control" placeholder="Subscription term" pattern="[A-Za-z\.]{3,15}" title="Eqaul to or more than 3 letters" required>
                                   </div>
                               </div>
 
                                <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Manager</label>
                                 <div class="col-sm-7">
-                                <input type="text" name="manager" value="" class="form-control" placeholder="Manager">
+                                <input type="text" name="manager" value="" class="form-control" placeholder="Manager" pattern="[A-Za-z\.]{3,15}" title="Eqaul to or more than 3 letters" required>
                                   </div>
                               </div>
 
                               <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Capacity</label>
                                 <div class="col-sm-7">
-                                <input type="text" name="capacity" value="" class="form-control" placeholder="Capacity">
+                                <input type="number" name="capacity" value="" class="form-control" placeholder="Capacity" required>
                                   </div>
                               </div>
 
                               <div class="form-group row">
-                                <label class="col-sm-3 col-form-label">Select service image(optional)</label>
+                                <label class="col-sm-3 col-form-label">Select service image</label>
                                 <div class="col-sm-7">
-                                   <input type="file" name="file" class="form-control" placeholder="Capacity">
+                                   <input type="file" name="file" class="form-control" placeholder="Capacity" required>
                                 </div>
                               </div><br>
 

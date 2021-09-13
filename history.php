@@ -1,6 +1,6 @@
+<?php include_once('security.php'); ?>
 <!doctype html>
 <html class="no-js" lang="en">
-<?php include_once('security.php');?>
 <head>
     <?php include_once('header_links.php'); ?>
 </head>

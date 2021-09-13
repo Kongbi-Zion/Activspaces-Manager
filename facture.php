@@ -1,7 +1,7 @@
 <!doctype html>
 <html class="no-js" lang="en">
 <?php
-  include_once('security.php');
+ include_once('security.php');
  include_once('db_connection.php');
 
  $query = "SELECT * FROM services";
@@ -11,10 +11,9 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Create Facture</title>
+    <title>Create Facture | Activspaces Manager (ASM)</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-     
      <?php include_once('header_links.php'); ?>
 </head>
 
@@ -65,7 +64,6 @@
                                          <option value="Day">Day</option>
                                          <option value="Week">Week</option>
                                          <option value="Month">Month</option>
-                                         <option value="Year">Year</option>
                                     </select>
                                 </div>
                             </div>
@@ -79,9 +77,12 @@
 
                                  <?php $date = date('d/m/Y'); ?>
 
-
-                            
                                 <input type="hidden" name="date_created" value="<?php echo $date;  ?>" class="form-control">
+
+                                 <?php  date_default_timezone_set('Africa/Douala'); ?>
+                                 <?php $time = date('h:ia'); ?>
+
+                                <input type="hidden" name="time_created" value="<?php echo $time;  ?>" class="form-control">
 
                              <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Objective</label>

@@ -2,56 +2,13 @@
      include_once('security.php'); 
      include_once('db_connection.php');
 
-               $current_year = date('Y'); 
-               $current_year_query = "SELECT year_name FROM year WHERE year_name='$current_year' ";
-               $current_year_query_run = mysqli_query($connection, $current_year_query);
-               
-               if ($current_year_query_run->num_rows > 0) {
-                }else{
-                     $current_year_insert = "INSERT INTO year (year_name) VALUES ('$current_year')";
-                     $current_year_insert_run = mysqli_query($connection, $current_year_insert);
-                }
-
+                              
+                               
+                                     
 
                 // CONDITIONS TO DRAW THE GRAPH
 
-               if(isset($_SESSION['username']) && !(isset($_POST['filter']))){
-                $display = 'month';
-                $this_year = date('Y');
-               }
-
-               if(isset($_SESSION['username']) && isset($_POST['filter'])){
-                $from_date = $_POST['from_date'];
-                $to_date =  $_POST['to_date'];
-                $option = $_POST['selected_year'];
-
-                 if($from_date != '' && ($to_date == '' && $option == '')){
-                  $display = 'day';
-                  $this_year = date('Y');
-
-                  $query_day = "SELECT * FROM facture WHERE date_of_creation='$from_date' ";
-                  $query_day_run = mysqli_query($connection, $query_day);
-                 }
-
-                 if( ($from_date != '' && $to_date != '') && $option =='' ){
-                  $display = 'range';
-                  $this_year= date('Y');
-
-                     $range_of_days = "SELECT * FROM total_amount_per_day WHERE day BETWEEN '$from_date' AND '$to_date' ";
-                     $range_of_days_run = mysqli_query($connection, $range_of_days); 
-                 }
-
-                if($option != '' && ($from_date == '' && $to_date == '')){
-                  $display = 'year';
-                  $this_year = $option;
-                }
-
-                if(($from_date == '' && $to_date == '') && $option == ''){
-                    $this_year = date('Y');
-                    $display = 'month';
-                }
-   
-               }
+               
             
 
             $query1 = "SELECT * FROM facture WHERE date_of_creation LIKE '___01/".$this_year."' ";
@@ -168,7 +125,10 @@
                    {
                      $December += intval($row['amount']);
                    }
-               }             
+               }
+
+        
+           
           ?>
 
 
@@ -183,9 +143,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php include_once('header_links.php'); ?>  
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+      
 
-    <!------------------------------------------------- Default graph --------------------------------------------->  
     <script type="text/javascript">
+      
       var display = '<?= $display ?>';
       google.charts.load("current", {"packages":["bar"]});
       google.charts.setOnLoadCallback(drawChart);
@@ -205,109 +166,69 @@
         ["November", <?php echo $November; ?>, "color: gray"],
         ["December", <?php echo $December; ?>, "color: gray"]
       ]);
+
         var options = {    
            title: "Company Income",
         };
         var chart = new google.charts.Bar(document.getElementById("columnchart_material"));
         chart.draw(data, google.charts.Bar.convertOptions(options));
-  }       
-    </script>
- <!---------------------------------X---------------- Default graph -----------------X----------------------------> 
+
+     
+
+     // Data 2
+
+     //  var data2 = google.visualization.arrayToDataTable([
+     //    ["Day", "Amount", { role: "style" } ],
+
+     //  <?php
+     //    if(mysqli_num_rows($query_day_run) > 0)
+     //  {
+     //    while($row = mysqli_fetch_array($query_day_run))
+     //      {
+     //         echo "['" .$row['time_created']. "'," .$row['amount']. ", 'color: gray'],";
+     //      }
+     //  }
+     // ?>
+     //  ]);
+
+     //    var option2 = {    
+     //       title: "Company Income",
+     //    };
+     //    var chart2 = new google.charts.Bar(document.getElementById("columnchart_material"));
+     //    chart2.draw(data2, google.charts.Bar.convertOptions(option2));
 
 
- <!------------------------------------------------- Year graph --------------------------------------------->  
-    <script type="text/javascript">
-      var display = '<?= $display ?>';
-      google.charts.load("current", {"packages":["bar"]});
-      google.charts.setOnLoadCallback(drawChart);
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-        ["Year", "Amount", { role: "style" } ],
-        ["January", <?php  echo $January; ?>, "color: gray"],
-        ["February", <?php echo $February; ?>, "color: gray"],
-        ["March", <?php echo $March; ?>, "color: gray"],
-        ["April", <?php echo $April; ?>, "color: gray"],
-        ["May", <?php echo $May; ?>, "color: gray"],
-        ["June", <?php echo $June; ?>, "color: gray"],
-        ["July", <?php echo $July; ?>, "color: gray"],
-        ["August", <?php echo $August; ?>, "color: gray"],
-        ["September", <?php echo $September; ?>, "color: gray"],
-        ["October", <?php echo $October; ?>, "color: gray"],
-        ["November", <?php echo $November; ?>, "color: gray"],
-        ["December", <?php echo $December; ?>, "color: gray"]
-      ]);
-        if(display == 'year'){
-           var options = {    
-              title: "Company Income",
-           };
-           var chart = new google.charts.Bar(document.getElementById("columnchart_material"));
-           chart.draw(data, google.charts.Bar.convertOptions(options));
-      }
-  }       
-    </script>
- <!---------------------------------X---------------- Year graph -----------------X----------------------------> 
-      
-<!------------------------------------------------- Day graph --------------------------------------------->  
-<script type="text/javascript">
-   var display = '<?= $display ?>';
-     google.charts.load("current", {"packages":["bar"]});
-     google.charts.setOnLoadCallback(drawChart);
-     function drawChart() {
-     var data2 = google.visualization.arrayToDataTable([
-         ["Day", "Amount", { role: "style" } ],
-         <?php
-           if(mysqli_num_rows($query_day_run) > 0)
-           {
-             while($row = mysqli_fetch_array($query_day_run))
-             {
-               echo "['" .$row['time_created']. "'," .$row['amount']. ", 'color: gray'],";
-             }
-           }
-         ?>
-      ]);
-      if(display == 'day'){
-        var option2 = {    
-           title: "Company Income",
-        };
-        var chart2 = new google.charts.Bar(document.getElementById("columnchart_material"));
-        chart2.draw(data2, google.charts.Bar.convertOptions(option2));
-      }
+     
+
+
+     //Data 3 
+
+     //  var data3 = google.visualization.arrayToDataTable([
+     //    ["Day", "Amount", { role: "style" } ],
+
+     //  <?php
+     //    if(mysqli_num_rows($range_of_days_run) > 0)
+     //  {
+     //    while($row = mysqli_fetch_array($range_of_days_run))
+     //      {
+     //         echo "['" .$row['day']. "'," .$row['amount']. ", 'color: gray'],";
+     //      }
+     //  }
+     // ?>
+     //  ]);
+
+     //    var option3 = {    
+     //       title: "Company Income",
+     //    };
+     //    var chart3 = new google.charts.Bar(document.getElementById("columnchart_material"));
+     //    chart3.draw(data3, google.charts.Bar.convertOptions(option3));
+
+
+
+
   }    
-</script>
-<!---------------------------------X---------------- Day graph -----------------X---------------------------->
-
-
-
-<!------------------------------------------------- Range graph --------------------------------------------->  
-
-
-<script type="text/javascript">
-   var display = '<?= $display ?>';
-     google.charts.load("current", {"packages":["bar"]});
-     google.charts.setOnLoadCallback(drawChart);
-     function drawChart() {
-     var data3 = google.visualization.arrayToDataTable([
-         ["Range of days", "Amount", { role: "style" } ],
-         <?php 
-           if(mysqli_num_rows($range_of_days_run) > 0)
-           {
-             while($row = mysqli_fetch_array($range_of_days_run))
-             {
-               echo "['" .$row['day']. "'," .$row['amount']. ", 'color: gray'],";
-             }
-           }
-         ?>
-      ]);
-      if(display == 'range'){
-        var option3 = {    
-           title: "Company Income",
-        };
-        var chart3 = new google.charts.Bar(document.getElementById("columnchart_material"));
-        chart3.draw(data3, google.charts.Bar.convertOptions(option3));
-      }
-  }    
-</script>
-<!---------------------------------X---------------- Range graph -----------------X----------------------------> 
+     
+    </script>
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>     
@@ -374,6 +295,11 @@ while($row = $data->fetch(PDO::FETCH_ASSOC)){
   $tab_period[] = $mois;
   $tab_montant[] =$montant;
 }
+// while($row = $data->fetch(PDO::FETCH_ASSOC)){
+//   extract($row);
+//   $tab_period[] = $periode;
+//   $tab_montant[] = $montant;
+// }
 
 
 $abonnement = $bdd->prepare('SELECT id_abonnement FROM abonnement');
@@ -608,3 +534,129 @@ $percentage6 = (int) ($montant6*100/$num);
     <?php include_once('footer_links.php'); ?> 
 </body>
 </html>
+
+
+
+
+
+ <!------------------------------------------------- Default graph --------------------------------------------->  
+    <script type="text/javascript">
+      var display = '<?= $display ?>';
+      google.charts.load("current", {"packages":["bar"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+        ["Year", "Amount", { role: "style" } ],
+        ["January", <?php  echo $January; ?>, "color: gray"],
+        ["February", <?php echo $February; ?>, "color: gray"],
+        ["March", <?php echo $March; ?>, "color: gray"],
+        ["April", <?php echo $April; ?>, "color: gray"],
+        ["May", <?php echo $May; ?>, "color: gray"],
+        ["June", <?php echo $June; ?>, "color: gray"],
+        ["July", <?php echo $July; ?>, "color: gray"],
+        ["August", <?php echo $August; ?>, "color: gray"],
+        ["September", <?php echo $September; ?>, "color: gray"],
+        ["October", <?php echo $October; ?>, "color: gray"],
+        ["November", <?php echo $November; ?>, "color: gray"],
+        ["December", <?php echo $December; ?>, "color: gray"]
+      ]);
+        var options = {    
+           title: "Company Income",
+        };
+        var chart = new google.charts.Bar(document.getElementById("columnchart_material"));
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+  }       
+    </script>
+ <!---------------------------------X---------------- Default graph -----------------X---------------------------->  
+
+
+
+ <!------------------------------------------------- Year graph --------------------------------------------->  
+    <script type="text/javascript">
+      var display = '<?= $display ?>';
+      google.charts.load("current", {"packages":["bar"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+        ["Year", "Amount", { role: "style" } ],
+        ["January", <?php  echo $January; ?>, "color: gray"],
+        ["February", <?php echo $February; ?>, "color: gray"],
+        ["March", <?php echo $March; ?>, "color: gray"],
+        ["April", <?php echo $April; ?>, "color: gray"],
+        ["May", <?php echo $May; ?>, "color: gray"],
+        ["June", <?php echo $June; ?>, "color: gray"],
+        ["July", <?php echo $July; ?>, "color: gray"],
+        ["August", <?php echo $August; ?>, "color: gray"],
+        ["September", <?php echo $September; ?>, "color: gray"],
+        ["October", <?php echo $October; ?>, "color: gray"],
+        ["November", <?php echo $November; ?>, "color: gray"],
+        ["December", <?php echo $December; ?>, "color: gray"]
+      ]);
+        if(display == 'month'){
+           var options = {    
+              title: "Company Income",
+           };
+           var chart = new google.charts.Bar(document.getElementById("columnchart_material"));
+           chart.draw(data, google.charts.Bar.convertOptions(options));
+      }
+  }       
+    </script>
+ <!---------------------------------X---------------- Year graph -----------------X----------------------------> 
+
+
+
+  <!------------------------------------------------- Day graph --------------------------------------------->  
+    <script type="text/javascript">
+      var display = '<?= $display ?>';
+      google.charts.load("current", {"packages":["bar"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+         var data2 = google.visualization.arrayToDataTable([
+             ["Day", "Amount", { role: "style" } ],
+             <?php
+                 if(mysqli_num_rows($query_day_run) > 0)
+                   {
+                     while($row = mysqli_fetch_array($query_day_run))
+                     {
+                       echo "['" .$row['time_created']. "'," .$row['amount']. ", 'color: gray'],";
+                     }
+                   }
+             ?>
+          ]);
+         if(display == 'day'){
+             var option2 = {    
+               title: "Company Income",
+              };
+             var chart2 = new google.charts.Bar(document.getElementById("columnchart_material"));
+             chart2.draw(data2, google.charts.Bar.convertOptions(option2));
+           }
+    </script>
+ <!---------------------------------X---------------- Day graph -----------------X----------------------------> 
+
+ <!------------------------------------------------- Range of days graph --------------------------------------------->  
+    <script type="text/javascript">
+      var display = '<?= $display ?>';
+      google.charts.load("current", {"packages":["bar"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+         var data3 = google.visualization.arrayToDataTable([
+             ["Range of days", "Amount", { role: "style" } ],
+             <?php
+                 if(mysqli_num_rows($range_of_days_run) > 0)
+                   {
+                     while($row = mysqli_fetch_array($range_of_days_run))
+                     {
+                       echo "['" .$row['day']. "'," .$row['amount']. ", 'color: gray'],";
+                     }
+                   }
+             ?>
+          ]);
+         if(display == 'range'){
+             var option3 = {    
+               title: "Company Income",
+              };
+             var chart3 = new google.charts.Bar(document.getElementById("columnchart_material"));
+             chart3.draw(data3, google.charts.Bar.convertOptions(option3));
+           }
+    </script>
+ <!---------------------------------X---------------- Range of days graph -----------------X----------------------------> 

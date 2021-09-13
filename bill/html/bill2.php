@@ -77,6 +77,7 @@
                                 $position = strpos($name_total, ' ');
                                 $nom = substr($name_total, 0,$position);
                                 $prenom = substr($name_total, $position+1);
+                                $time_created = $_POST['time_created'];
 
 
                              $query1 = "SELECT * FROM client WHERE nom='$nom' AND prenom='$prenom' ";
@@ -104,7 +105,24 @@
                                  $total_amount = $service['monthly_price'] * $qauntity;
                              }
 
-                             $query3 = "INSERT INTO facture (invoice_number,date_of_creation,id_client,id_service,period,qauntity,amount,Objective) VALUES ('$invoice_number','$date_created','$client_id','$service_id','$period','$qauntity','$total_amount', '$objective')";
+                             // inserting in to amount per day column 
+                              $todays_date = date('d/m/Y'); 
+                              $amount_per_day = "SELECT amount FROM total_amount_per_day WHERE day='$todays_date' ";
+                              $amount_per_day_run = mysqli_query($connection, $amount_per_day);
+                               if ($amount_per_day_run->num_rows > 0) {
+                                 $amount = $amount_per_day_run->fetch_assoc();     
+                                 $new_amount = $amount['amount']; 
+                                 $fianl_day_amount = $new_amount + $total_amount;
+
+                                 $query_update_amount = "UPDATE total_amount_per_day SET day='$todays_date', amount='$fianl_day_amount' WHERE day='$todays_date' ";
+                                 $query_update_amount_run = mysqli_query($connection, $query_update_amount);
+                                }
+                                else{
+                                     $query_insert_amount = "INSERT INTO total_amount_per_day (day,amount) VALUES ('$todays_date','$total_amount')";
+                                     $query_insert_amount_run = mysqli_query($connection, $query_insert_amount);
+                                }
+
+                             $query3 = "INSERT INTO facture (invoice_number,date_of_creation,id_client,id_service,period,qauntity,amount,Objective,time_created) VALUES ('$invoice_number','$date_created','$client_id','$service_id','$period','$qauntity','$total_amount', '$objective', '$time_created')";
                                     $query_run3 = mysqli_query($connection, $query3);
 
                             }
