@@ -34,7 +34,7 @@
 
                          ?>
 
-                        <form action="php-code.php" id="loginForm" method="POST">
+                        <form action="php-code.php" id="loginForm" method="POST"><br>
 
                             <div class="form-group">
                                 <label class="control-label" for="password">Usrename</label>
@@ -44,20 +44,8 @@
                             <div class="form-group">
                                 <label class="control-label" for="password">Password</label>
                                 <input type="password" title="Please enter your password" placeholder="******" required="" value="" name="password" id="password" class="form-control">
-                                <span class="help-block small">Yur strong password</span>
-                            </div>
-
-                            
-
-                            <div class="checkbox login-checkbox">
-
-                                <label>
-                                     <input type="checkbox" class="i-checks"> Remember me 
-                                </label>
-
-                                <p class="help-block small">(if this is a private computer)</p>
-                            </div>
-
+                                <span class="help-block small">Your strong password</span>
+                            </div><br><br>
                             <button name="login_btn" class="btn btn-success btn-block loginbtn">Login</button>
 
                         </form>

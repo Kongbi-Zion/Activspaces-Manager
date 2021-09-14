@@ -22,9 +22,9 @@
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="product-status-wrap drp-lst">
                             <h2 class="m-0 font-weight-bold text-primary">Liste des abonnements</h2>
-                            <div class="add-product">
+                            <!-- <div class="add-product">
                                 <a href="add-department.php">Ajouter un abonnement</a>
-                            </div>
+                            </div> -->
                             <div class="asset-inner">
 
                                     <?php
@@ -45,7 +45,7 @@
                                     while ($query = $query_run->fetch()) { 
                                         echo '<th>' .$query['name_of_service']. '</th>';
                                     }
-                                    echo '<th>stting</th></tr>';
+                                    
                                     
                                     $query_run->closeCursor();
 
@@ -71,8 +71,7 @@
                                         for($i=0; $i< COUNT($row["monthly_price"]); $i++){
                                             echo '<td>' .$row["monthly_price"][$i]. '</td>';} 
                                     echo '<td>
-                                            <button data-toggle="tooltip" title="Modifier" class="pd-setting-ed"><a href="edit-department.php"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></button>
-                                            <button data-toggle="tooltip" title="Supprimer" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                            
                                         </td>
                                     </tr>
                                     <tr>
@@ -80,19 +79,13 @@
                                         for($i=0; $i< COUNT($row["weekly_price"]); $i++){
                                             echo '<td>' .$row["weekly_price"][$i]. '</td>';}
                                         echo '<td>
-                                            <button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><a href="edit-department.php"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></button>
-                                            <button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                            
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>Journalière</td>';
                                         for($i=0; $i< COUNT($row["daily_price"]); $i++){
                                             echo '<td>' .$row["daily_price"][$i]. '</td>';}
-                                        echo '<td>
-                                            <button data-toggle="tooltip" title="Edit" class="pd-setting-ed"><a href="edit-department.php"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></button>
-                                            <button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
-                                        </td>
-                                    </tr>';
                                     ?>
                                 </table>
                             </div>

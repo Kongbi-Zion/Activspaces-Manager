@@ -8,16 +8,23 @@
      $total_service_amount_for_particular_month = array();
      $total_service_amount_for_particular_year = array();
      
+      // total percentages
+     $total_service_percentages = array();
      // total income from a particular service per month
      $query_services = "SELECT service_id, name_of_service FROM services "; 
      $query_services_run = mysqli_query($connection, $query_services);
-
      if(mysqli_num_rows($query_services_run) > 0)
        {
          while($row = mysqli_fetch_array($query_services_run))
          {
            $services_id = $row['service_id'];
            $name_of_service = $row['name_of_service'];
+           $total_amount = "SELECT SUM(amount) AS total_amount FROM facture "; 
+           $total_amount_run = mysqli_query($connection, $total_amount);
+           if($total_amount_run->num_rows > 0) {
+             $total_percentage_amount = $total_amount_run->fetch_assoc();
+             $amount_totall = $total_percentage_amount['total_amount'];
+           }
            $current_amount = "SELECT SUM(amount) AS total_services_amount FROM facture WHERE id_service='$services_id' "; 
            $current_amount_run = mysqli_query($connection, $current_amount);
            if($current_amount_run->num_rows > 0) {
@@ -27,9 +34,12 @@
                $amount_per_service = 0;
              }
              $total_service_amount_per_month[$name_of_service] = $amount_per_service;
+             $current_pecentage = (int) ($amount_per_service*100/$amount_totall);
+             $total_service_percentages[$name_of_service] = $current_pecentage;
            }
          }
        }
+
 
     // conditions to display graph
      if(isset($_SESSION['username']) && !(isset($_POST['filter']))){
@@ -328,225 +338,71 @@
 <body>
     <?php include_once('side_bar.php'); ?>
 
-     <?php include_once('nav_bar.php'); ?> <br><br><br><br>
+     <?php include_once('nav_bar.php'); ?> <br><br><br>
      
            
             <div class="breadcome-area">
                 <div class="container-fluid">
                      <div class="row">
-                         <?php 
 
-
-try {
-    $bdd=new PDO ( 'mysql:host=localhost;dbname=asm1_db','root','' );
-    $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $bdd->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-}catch(Exception $e) {
-    die("Error: ". $e->getMessage());
-}
-
-$data=$bdd->prepare('SELECT * FROM facture GROUP BY MONTH(date_creation)');
- $data->execute();
-
-$tab_period = [];
-$tab_montant = [];
-while($row = $data->fetch(PDO::FETCH_ASSOC)){
-  extract($row);
-  // recuperation du mois
-  setlocale(LC_TIME, 'fr_FR', 'fra_FRA');
-  $month = strftime("%B",strtotime($date_creation));
-  $mois = utf8_encode($month);
-
-  $tab_period[] = $mois;
-  $tab_montant[] =$montant;
-}
-// while($row = $data->fetch(PDO::FETCH_ASSOC)){
-//   extract($row);
-//   $tab_period[] = $periode;
-//   $tab_montant[] = $montant;
-// }
-
-
-$abonnement = $bdd->prepare('SELECT id_abonnement FROM abonnement');
-$abonnement->execute();
-$nbre_abon = $abonnement->fetchAll();
- $total = count($nbre_abon);
-
-
-$services = $bdd->prepare('SELECT id_services, montant FROM facture');
-$services->execute();
-$i=0;
-while ($nbre_serv = $services->fetch()){
-
-    $idserv[$i] = (int) $nbre_serv['id_services'];
-   $montan[$i] = (int) $nbre_serv['montant'];
-    $i = $i + 1;
-
-}
-  
-   $montant1=0;
-    $montant2=0;
-    $montant3=0;
-     $montant4=0;
-      $montant5=0;
-       $montant6=0;
-
-       $num=0;
-
-$montant = $montan;
-for ($i=0; $i < COUNT($montant) ; $i++) { 
-     $num = $num + (int) $montant[$i];
-}
-
-for ($i=0; $i < COUNT($montant) ; $i++) { 
-    
-    if( $idserv[$i]==1 AND $montant[$i] != 0){
-        $montant1 += (int) $montant[$i];
-    }
-
-     if( $idserv[$i]==2  AND $montant[$i] != 0){
-        $montant2 += $montant[$i];
-    }
-
-     if( $idserv[$i]==3 AND $montant[$i] != 0){
-        $montant3 += $montant[$i];
-    }
-
-     if( $idserv[$i]==4 AND $montant[$i] != 0){
-        $montant4 += $montant[$i];
-    }
-
-     if( $idserv[$i]==5 AND $montant[$i] != 0){
-        $montant5 += $montant[$i];
-    }
-
-     if( $idserv[$i]==6 AND $montant[$i] != 0){
-        $montant6 += $montant[$i];
-    }
-
-
-}
-
-$percentage1 = (int) ($montant1*100/$num);
-$percentage2 = (int) ($montant2*100/$num);
-$percentage3 = (int) ($montant3*100/$num);
-$percentage4 = (int) ($montant4*100/$num);
-$percentage5 = (int) ($montant5*100/$num);
-$percentage6 = (int) ($montant6*100/$num);  
-?>
-
-        <div class="analytics-sparkle-area">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                       <?php 
+                 foreach ($total_service_percentages as $key => $value) {
+                   
+                 ?>
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12" style="margin-bottom: 1.5rem;">
                         <div class="analytics-sparkle-line reso-mg-b-30">
                             <div class="analytics-content">
-                                <h5>Co-working Space</h5>
-                                <h2>XAF<span class="counter"><?php echo ' '.(int)$montant1; ?></span>
+                                <h5><?php echo $key; ?></h5>
+                                <h2>XAF<span class=""><?php echo " ".(int)$total_service_amount_per_month[$key]; ?></span>
                                 <span class="tuition-fees"></span></h2>
-                                <span class="text-success"><?php echo $percentage1; ?>%</span>
+                                <span class="text-success"><?php echo $value; ?>%</span>
                                 <div class="progress m-b-0">
-                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $percentage1; ?>%";> <span class="sr-only">0% Complete</span> </div>
+                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $value; ?>%";> <span class="sr-only">0% Complete</span> </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                  <?php
+
+                }
+
+                ?>
+         
                     <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                         <div class="analytics-sparkle-line reso-mg-b-30">
                             <div class="analytics-content">
-                                <h5>Salle De Reunion</h5>
-                                <h2>XAF<span class="counter"><?php echo ' '.$montant2; ?></span> <span class="tuition-fees">Montant</span></h2>
-                                <span class="text-danger"><?php echo $percentage2; ?>%</span>
-                                <div class="progress m-b-0">
-                                    <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $percentage2; ?>%;"> <span class="sr-only">0% Complete</span> </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
-                        <div class="analytics-sparkle-line reso-mg-b-30">
-                            <div class="analytics-content"><br>
-                                <h5>Nombre Abonnement</h5>
-                                <h2><?php echo ' '. $total ?></h2>
+                                <h5>Number Of Services</h5><br><br>
+                                <?php $total_number_of_services = count($total_service_amount_per_month); ?>
+                                <h2><?php echo ' '. $total_number_of_services; ?></h2>
                                 <span class="text-danger"></span>
                                 <div class="progress m-b-0">
-                                    <div class="progress-bar progress-bar-secondary" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo ' '. $total ?>%;"> <span class="sr-only">0% Complete</span> </div>
+                                    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo ' '. $amount_totall; ?>%;"> <span class="sr-only">0% Complete</span> </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
 
                     <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
                         <div class="analytics-sparkle-line reso-mg-b-30 table-mg-t-pro dk-res-t-pro-30">
                             <div class="analytics-content">
-                                <h5>Hall</h5>
-                                <h2>XAF<span class="counter"><?php echo ' '.$montant3; ?></span> <span class="tuition-fees">Montant</span></h2>
-                                <span class="text-info"><?php echo $percentage3; ?>%</span>
-                                <div class="progress m-b-0">
-                                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $percentage3; ?>%;"> <span class="sr-only">0% Complete</span> </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12" style="margin-top: 1.3rem;">
-                        <div class="analytics-sparkle-line table-mg-t-pro dk-res-t-pro-30">
-                            <div class="analytics-content">
-                                <h5>MakerSpace</h5>
-                                <h2>XAF<span class="counter"><?php echo ' '. $montant4; ?></span> <span class="tuition-fees">Montant</span></h2>
-                                <span class="text-inverse"><?php echo $percentage4; ?>%</span>
-                                <div class="progress m-b-0">
-                                    <div class="progress-bar progress-bar-inverse" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $percentage4; ?>%;"> <span class="sr-only">0% Complete</span> </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                     <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12" style="margin-top: 1.3rem;">
-                        <div class="analytics-sparkle-line reso-mg-b-30 table-mg-t-pro dk-res-t-pro-30">
-                            <div class="analytics-content">
-                                <h5>Boxes</h5>
-                                <h2>XAF<span class="counter"><?php echo ' '.$montant5; ?></span> <span class="tuition-fees">Montant</span></h2>
-                                <span class="text-warning"><?php echo $percentage5; ?>%</span>
-                                <div class="progress m-b-0">
-                                    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $percentage5; ?>%;"> <span class="sr-only">0% Complete</span> </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                     <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12" style="margin-top: 1.3rem;">
-                        <div class="analytics-sparkle-line reso-mg-b-30 table-mg-t-pro dk-res-t-pro-30">
-                            <div class="analytics-content">
-                                <h5>Formation</h5>
-                                <h2>XAF<span class="counter"><?php echo ' '. $montant6; ?></span> <span class="tuition-fees">Montant</span></h2>
-                                <span class="text-info"><?php echo $percentage6; ?>%</span>
-                                <div class="progress m-b-0">
-                                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo $percentage6; ?>%;"> <span class="sr-only">0% Complete</span> </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                     <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12" style="margin-top: 1.3rem;">
-                        <div class="analytics-sparkle-line reso-mg-b-30 table-mg-t-pro dk-res-t-pro-30">
-                            <div class="analytics-content">
-                                <h5>Total Services</h5>
-                                <h2>XAF<span class="counter"></span><?php echo ' '. $num; ?><span class="tuition-fees">Montant</span></h2>
+                                <h5>Total Services Amount</h5><br>
+                                <h2>XAF<span class=""></span><?php echo " ".(int)$amount_totall; ?><span class="tuition-fees">Montant</span></h2>
                                 
                                 <div class="progress m-b-0">
-                                    <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo ' '. $num; ?>%;"> <span class="sr-only">0% Complete</span> </div>
+                                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo ' '. $amount_totall; ?>%;"> <span class="sr-only">0% Complete</span> </div>
                                 </div><br>
                             </div>
                         </div>
                     </div>
-                </div>
+                        
+        
+                     </div>
 
+               </div>
             </div>
-     </div>
-            <div class="container" style="width:800px; margin-left: 18rem; margin-top: 5rem; margin-bottom: -5rem;">
+            <div class="container" style="width:800px; margin-left: 18rem; margin-top: 2.5rem; margin-bottom: -5rem;">
               <form action="#" method="POST">
                 <div class="col-md-2">  
                      <input type="text" name="from_date" id="from_date" class="form-control" placeholder="From Date" style="border-radius: 8px;" />  

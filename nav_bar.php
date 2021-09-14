@@ -68,7 +68,7 @@
                                                             <i class="fa fa-angle-down edu-icon edu-down-arrow"></i>
                                                         </a>
                                                     <ul role="menu" class="dropdown-header-top author-log dropdown-menu animated zoomIn">
-                                                        <li><a href="#"><span class="edu-icon edu-home-admin author-log-ic"></span>Mon Profil</a>
+                                                        <li><a href="" data-toggle="modal" data-target="#exampleModal" ><span class="edu-icon edu-home-admin author-log-ic"></span>Mon Profil</a>
                                                         </li>
                                                        
                                                         <li><a href="login.php"><span class="edu-icon edu-locked author-log-ic"></span>Se déconnecter</a>
@@ -518,3 +518,47 @@
                     </div>
                 </div>
             </div>
+
+<form action="php-code.php" method="POST">
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Users Profile</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+             <div class="form-group row">
+                 <label for="inputPassword" class="col-sm-2 col-form-label">Username</label>
+                 <div class="col-sm-7">
+                     <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                 </div>
+             </div>
+
+             <div class="form-group row">
+                 <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+                 <div class="col-sm-7">
+                     <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                 </div>
+             </div>
+
+             <div class="form-group row">
+                 <label class="col-sm-2 col-form-label">Profile image</label>
+                 <div class="col-sm-7">
+                     <input type="file" name="file" class="form-control" placeholder="Capacity">
+                 </div>
+             </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" name="">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+ </form>
